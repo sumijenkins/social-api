@@ -2,4 +2,4 @@ server:
   port: 8080
 
 app:
-  api-key: your-secret-api-key
+  api-key: "abc123xyz"

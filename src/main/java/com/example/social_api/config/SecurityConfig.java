@@ -1,9 +1,11 @@
 package com.example.social_api.config;
 
+import com.example.social_api.repository.UserRepository;
 import com.example.social_api.security.ApiKeyFilter;
-import org.jetbrains.annotations.NotNull;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -12,26 +14,37 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /*
 controls every http request if x-api-key is valid
  */
-@Configuration //bean config
+
+
+
+@Configuration
 public class SecurityConfig {
 
-    private final ApiKeyFilter apiKeyFilter;
+    private final UserRepository userRepository;
 
-    public SecurityConfig(ApiKeyFilter apiKeyFilter) {
-        this.apiKeyFilter = apiKeyFilter;
+    public SecurityConfig(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(@NotNull HttpSecurity http) throws Exception {
+    public ApiKeyFilter apiKeyFilter() {
+        return new ApiKeyFilter(userRepository);
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) //generally disabled for api
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().authenticated() //every endpoint requires
+                        .requestMatchers("/api/users").permitAll()        // kullanıcı oluşturma açık
+                        .requestMatchers("/api/users/me").authenticated() // kişisel veri korumalı
+                        .requestMatchers("/api/comments/**").authenticated() // yorum ekleme, düzenleme, silme korumalı
+                        .anyRequest().permitAll()
                 )
-                .addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(apiKeyFilter(), UsernamePasswordAuthenticationFilter.class); // ÖNEMLİ!
 
         return http.build();
     }
-
-
 }
+
+

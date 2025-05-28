@@ -10,8 +10,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    Page<Comment> findByPostIdAndDeletedFalse(Long postId, Pageable pageable);
+    Page<Comment> findByPost_IdAndDeletedFalse(Long postId, Pageable pageable);
     /*
     automatically implemented by jpa repository class
      */
+
+
 }

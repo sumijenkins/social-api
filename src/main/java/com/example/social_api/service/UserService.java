@@ -1,4 +1,4 @@
-package service;
+package com.example.social_api.service;
 
 import com.example.social_api.model.User;
 import org.springframework.data.domain.Page;
@@ -12,5 +12,6 @@ public interface UserService {
     Optional<User> getUserById(Long userId);
     Page<User> getAllUsers(Pageable pageable);
     void deleteUser(Long userId);
+    Optional<User> findByApiKey(String apiKey);
 
 }

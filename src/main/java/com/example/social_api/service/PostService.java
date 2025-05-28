@@ -1,4 +1,4 @@
-package service;
+package com.example.social_api.service;
 
 import com.example.social_api.model.Post;
 import org.springframework.data.domain.Pageable;
@@ -13,4 +13,5 @@ public interface PostService {
     Optional<Post> getPostById(Long postId);
     Page<Post> getAllPosts(Pageable pageable);
     void deletePost(Long postId);
+    Page<Post> getPostsByUserId(Long userId, Pageable pageable);
 }

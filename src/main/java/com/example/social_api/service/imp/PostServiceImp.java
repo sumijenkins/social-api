@@ -1,12 +1,11 @@
-package service.imp;
+package com.example.social_api.service.imp;
 
 import com.example.social_api.model.Post;
 import com.example.social_api.repository.PostRepository;
+import com.example.social_api.service.PostService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import service.PostService;
-import java.util.List;
 
 import java.util.Optional;
 
@@ -41,4 +40,9 @@ public class PostServiceImp implements PostService {
         post.setDeleted(true);
         postRepository.save(post);
     }
+    @Override
+    public Page<Post> getPostsByUserId(Long userId, Pageable pageable) {
+        return postRepository.findByUserId(userId, pageable);
+    }
+
 }

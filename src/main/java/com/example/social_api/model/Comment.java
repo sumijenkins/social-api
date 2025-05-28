@@ -1,10 +1,12 @@
 package com.example.social_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "comments")
 public class Comment {
 
     @Id
@@ -21,13 +23,16 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "post_id")
+    //@JsonIgnore
     private Post post;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Comment> replies;
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
+    @JsonIgnore
     private Comment parentComment; //if it is a reply
 
     private int likes;
@@ -40,10 +45,6 @@ public class Comment {
         createdAt = LocalDateTime.now();
     }
 
-    @PreUpdate
-    protected void onUpdate(){
-        updatedAt = LocalDateTime.now();
-    }
 
     public Long getId() {
         return id;
@@ -73,9 +74,7 @@ public class Comment {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+
 
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
