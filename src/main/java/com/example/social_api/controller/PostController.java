@@ -1,6 +1,8 @@
 package com.example.social_api.controller;
 import com.example.social_api.model.Post;
+import com.example.social_api.model.User;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.example.social_api.service.PostService;
 import org.springframework.data.domain.Page;
@@ -18,8 +20,13 @@ public class PostController {
     }
 
     @PostMapping
-    public Post createPost(@RequestBody Post post){
-        return postService.createPost(post);
+    public ResponseEntity<Post> createPost(@RequestBody Post post){
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        post.setUser(currentUser);  // postu API key kullanıcısına bağla
+        Post createdPost = postService.createPost(post);
+
+        return ResponseEntity.ok(createdPost);
     }
 
     @GetMapping("/{id}")

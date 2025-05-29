@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -21,6 +22,8 @@ public class PostServiceImp implements PostService {
 
     @Override
     public Post createPost(Post post) {
+        post.setDeleted(false);
+        post.setCreatedAt(LocalDateTime.now());
         return postRepository.save(post);
     }
 

@@ -38,6 +38,10 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
             return;
         }
+        if (path.startsWith("/api/posts") && "GET".equalsIgnoreCase(request.getMethod())) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         if (apiKey == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -47,7 +51,6 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
         var userOpt = userRepository.findByApiKey(apiKey);
         boolean exists = userOpt.isPresent();
-        System.out.println("Key veritabanında var mı? " + exists);
 
         if (!exists) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -55,12 +58,12 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             return;
         }
 
-        // API key geçerli, Authentication objesi oluştur ve SecurityContext'e ekle
+
         User user = userOpt.get();
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                user.getUsername(),
+                user,
                 null,
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")) // basit rol ataması
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

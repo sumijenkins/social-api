@@ -65,7 +65,7 @@ public class Post {
         this.content = content;
     }
 
-    private void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 

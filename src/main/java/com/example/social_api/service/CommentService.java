@@ -1,5 +1,6 @@
 package com.example.social_api.service;
 import com.example.social_api.model.Comment;
+import com.example.social_api.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,4 +15,5 @@ public interface CommentService {
     Optional<Comment> updateComment(Long commentId, Comment updatedComment);
     Comment createComment(Comment comment);
     void deleteComment(Long id);
+    Comment createCommentWithUser(Comment comment, User user);
 }

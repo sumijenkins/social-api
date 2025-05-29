@@ -36,9 +36,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users").permitAll()        // kullanıcı oluşturma açık
-                        .requestMatchers("/api/users/me").authenticated() // kişisel veri korumalı
-                        .requestMatchers("/api/comments/**").authenticated() // yorum ekleme, düzenleme, silme korumalı
+                        .requestMatchers("/api/users").permitAll()
+                        .requestMatchers("/api/users/me").authenticated() // personal data secured
+                        .requestMatchers("/api/comments/post/**").permitAll() //view comments
+                        .requestMatchers("/api/comments/**").authenticated() // comment operations
+                        .requestMatchers("/api/posts").permitAll()
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(apiKeyFilter(), UsernamePasswordAuthenticationFilter.class); // ÖNEMLİ!
